@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="lib/vue.min.js"></script>
+    <script src="lib/lodash.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <title>Gestionnaire restaurants VueJS</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <form v-on:submit="RecupMeth(event);">
+          
+        <input id="idd" type="hidden" name="idd" required v-model="idd" />
+        <label> Nom : <input type="text" v-model="name" /> </label>
+
+        <label> Cuisine : <input type="text" v-model="cuisine" /> </label>
+
+        <button>Ajouter</button>
+      </form>
+
+      <h1>Nombre des restaurants :: {{ nbrestaurant }}</h1>
+      <p>
+        Nbr restaurants par page :
+        <input
+          type="range"
+          min="5"
+          max="100"
+          value="10"
+          step="5"
+          v-model="pagesize"
+          v-on:change="getRestaurantsFromServer();"
+        />
+        {{ pagesize }}
+      </p>
+
+      <p>
+        <label>
+          Rechercher par nom :
+          <input
+            type="text"
+            v-on:input="getRestaurantsFromServer()"
+            v-model="nomRecherche"
+          />
+        </label>
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>nom</th>
+            <th>cuisine</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="r,index in restaurants">
+            <td>{{ r.name }}</td>
+            <td>{{ r.cuisine }}</td>
+            <td>
+              <button v-on:click="supprimerRestaurant(r._id)">
+                supprimer Restaurant
+              </button>
+              <button v-on:click="getRequest4(r._id)">
+                modifier Restaurant
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div>
+        <button v-on:click="premierepage()" v-bind:class="{inactif:(page==0)} ">
+          premiere page
+        </button>
+
+        <button v-on:click="precedentMeth()" v-bind:disabled="page==0">
+          précedent
+        </button>
+        <button v-on:click="SuivantMeth()" v-bind:disabled="page==nbrPage">
+          suivant
+        </button>
+
+        <button
+          v-on:click="dernierepage()"
+          v-bind:class="{inactif:(page == (nbrPage-1))}"
+        >
+          derniere page
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
